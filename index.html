@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Tools Portal - Tooba Urooj</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<style>
+body{
+margin:0;
+font-family:Segoe UI;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+}
+
+header{
+text-align:center;
+padding:30px;
+background:rgba(0,0,0,0.4);
+}
+
+h1,h2,p{margin:5px;}
+
+.controls{
+text-align:center;
+padding:20px;
+}
+
+input,select{
+padding:10px;
+border-radius:8px;
+border:none;
+margin:5px;
+}
+
+.container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+padding:30px;
+}
+
+.card{
+background:rgba(255,255,255,0.1);
+padding:20px;
+border-radius:15px;
+text-align:center;
+cursor:pointer;
+transition:0.3s;
+}
+
+.card:hover{
+transform:translateY(-8px);
+background:rgba(255,255,255,0.2);
+}
+
+.card i{
+font-size:35px;
+margin-bottom:10px;
+}
+
+footer{
+text-align:center;
+padding:20px;
+background:rgba(0,0,0,0.4);
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>AI Tools Portal</h1>
+<h2>Tooba Urooj</h2>
+<p>Roll No: SU73-BSAIM-F24-018</p>
+<p>Department: BSAI - 4th Semester</p>
+<p>Course: Programming for AI</p>
+<p><strong>Assessment 4 – 50 AI Tools</strong></p>
+</header>
+
+<div class="controls">
+<input type="text" id="search" placeholder="Search AI Tool..." onkeyup="searchTool()">
+<select id="category" onchange="filterCategory()">
+<option value="all">All Categories</option>
+<option value="text">Text AI</option>
+<option value="image">Image AI</option>
+<option value="video">Video AI</option>
+<option value="coding">Coding AI</option>
+<option value="productivity">Productivity AI</option>
+</select>
+</div>
+
+<div class="container" id="toolsContainer"></div>
+
+<footer>
+© 2026 Tooba Urooj | Programming for AI
+</footer>
+
+<script>
+
+const tools = [
+{name:"ChatGPT",url:"https://chat.openai.com",icon:"fa-robot",desc:"Advanced conversational AI assistant.",cat:"text"},
+{name:"Claude AI",url:"https://claude.ai",icon:"fa-comments",desc:"AI chatbot for writing and analysis.",cat:"text"},
+{name:"Jasper AI",url:"https://www.jasper.ai",icon:"fa-pen",desc:"AI content writing assistant.",cat:"text"},
+{name:"Copy.ai",url:"https://www.copy.ai",icon:"fa-copy",desc:"AI marketing content generator.",cat:"text"},
+{name:"Grammarly",url:"https://www.grammarly.com",icon:"fa-spell-check",desc:"AI grammar correction tool.",cat:"text"},
+{name:"Notion AI",url:"https://www.notion.so",icon:"fa-note-sticky",desc:"Smart AI workspace assistant.",cat:"productivity"},
+{name:"Perplexity AI",url:"https://www.perplexity.ai",icon:"fa-magnifying-glass",desc:"AI powered answer engine.",cat:"text"},
+{name:"Gemini",url:"https://gemini.google.com",icon:"fa-brain",desc:"Google AI assistant.",cat:"text"},
+{name:"Midjourney",url:"https://www.midjourney.com",icon:"fa-image",desc:"AI art generation tool.",cat:"image"},
+{name:"DALL·E",url:"https://openai.com/dall-e",icon:"fa-palette",desc:"AI image creation model.",cat:"image"},
+{name:"Leonardo AI",url:"https://leonardo.ai",icon:"fa-paintbrush",desc:"AI image generation platform.",cat:"image"},
+{name:"Canva AI",url:"https://www.canva.com",icon:"fa-wand-magic-sparkles",desc:"Design tool with AI features.",cat:"image"},
+{name:"Runway ML",url:"https://runwayml.com",icon:"fa-video",desc:"AI video editing platform.",cat:"video"},
+{name:"Pictory",url:"https://pictory.ai",icon:"fa-film",desc:"AI video creation tool.",cat:"video"},
+{name:"Synthesia",url:"https://www.synthesia.io",icon:"fa-user",desc:"AI avatar video creator.",cat:"video"},
+{name:"Tome AI",url:"https://tome.app",icon:"fa-book",desc:"AI presentation creator.",cat:"productivity"},
+{name:"Replika",url:"https://replika.com",icon:"fa-heart",desc:"AI companion chatbot.",cat:"text"},
+{name:"ElevenLabs",url:"https://elevenlabs.io",icon:"fa-microphone",desc:"AI voice generation tool.",cat:"video"},
+{name:"DeepAI",url:"https://deepai.org",icon:"fa-network-wired",desc:"AI tools and APIs platform.",cat:"image"},
+{name:"GitHub Copilot",url:"https://github.com/features/copilot",icon:"fa-code",desc:"AI code completion tool.",cat:"coding"},
+{name:"Tabnine",url:"https://www.tabnine.com",icon:"fa-laptop-code",desc:"AI coding assistant.",cat:"coding"},
+{name:"Hugging Face",url:"https://huggingface.co",icon:"fa-face-smile",desc:"AI model sharing platform.",cat:"coding"},
+{name:"QuillBot",url:"https://quillbot.com",icon:"fa-pen-fancy",desc:"AI paraphrasing tool.",cat:"text"},
+{name:"Otter AI",url:"https://otter.ai",icon:"fa-headphones",desc:"AI meeting transcription.",cat:"productivity"},
+{name:"Lumen5",url:"https://lumen5.com",icon:"fa-clapperboard",desc:"AI video content maker.",cat:"video"},
+{name:"Remove.bg",url:"https://remove.bg",icon:"fa-scissors",desc:"AI background remover.",cat:"image"},
+{name:"Fotor AI",url:"https://www.fotor.com",icon:"fa-camera",desc:"AI photo editing tool.",cat:"image"},
+{name:"Descript",url:"https://www.descript.com",icon:"fa-wave-square",desc:"AI audio/video editor.",cat:"video"},
+{name:"Writesonic",url:"https://writesonic.com",icon:"fa-keyboard",desc:"AI writing platform.",cat:"text"},
+{name:"Rytr",url:"https://rytr.me",icon:"fa-pen-nib",desc:"AI content writer.",cat:"text"},
+{name:"Beautiful AI",url:"https://www.beautiful.ai",icon:"fa-chart-line",desc:"AI presentation maker.",cat:"productivity"},
+{name:"ClickUp AI",url:"https://clickup.com",icon:"fa-list-check",desc:"AI productivity assistant.",cat:"productivity"},
+{name:"Durable AI",url:"https://durable.co",icon:"fa-globe",desc:"AI website builder.",cat:"productivity"},
+{name:"Murf AI",url:"https://murf.ai",icon:"fa-volume-high",desc:"AI voiceover generator.",cat:"video"},
+{name:"Krisp AI",url:"https://krisp.ai",icon:"fa-microphone-lines-slash",desc:"AI noise cancellation.",cat:"productivity"},
+{name:"ChatPDF",url:"https://www.chatpdf.com",icon:"fa-file-pdf",desc:"AI PDF assistant.",cat:"text"},
+{name:"PlayHT",url:"https://play.ht",icon:"fa-play",desc:"AI voice synthesis tool.",cat:"video"},
+{name:"Looka AI",url:"https://looka.com",icon:"fa-crown",desc:"AI logo maker.",cat:"image"},
+{name:"Hotpot AI",url:"https://hotpot.ai",icon:"fa-fire",desc:"AI design and image tool.",cat:"image"},
+{name:"Stockimg AI",url:"https://stockimg.ai",icon:"fa-images",desc:"AI stock image creator.",cat:"image"},
+{name:"Codeium",url:"https://codeium.com",icon:"fa-terminal",desc:"AI coding assistant.",cat:"coding"},
+{name:"AskCodi",url:"https://askcodi.com",icon:"fa-laptop",desc:"AI code helper.",cat:"coding"},
+{name:"Scalenut",url:"https://www.scalenut.com",icon:"fa-chart-bar",desc:"AI SEO content tool.",cat:"text"},
+{name:"Ink AI",url:"https://inkforall.com",icon:"fa-pen-to-square",desc:"AI marketing writer.",cat:"text"},
+{name:"Elicit AI",url:"https://elicit.org",icon:"fa-lightbulb",desc:"AI research assistant.",cat:"text"},
+{name:"Gamma AI",url:"https://gamma.app",icon:"fa-layer-group",desc:"AI document creator.",cat:"productivity"},
+{name:"Soundraw",url:"https://soundraw.io",icon:"fa-music",desc:"AI music generator.",cat:"video"},
+{name:"Predis AI",url:"https://predis.ai",icon:"fa-share-nodes",desc:"AI social media creator.",cat:"productivity"},
+{name:"Magisto",url:"https://www.magisto.com",icon:"fa-camera-retro",desc:"AI video editing tool.",cat:"video"}
+];
+
+const container = document.getElementById("toolsContainer");
+
+function displayTools(list){
+container.innerHTML="";
+list.forEach(tool=>{
+container.innerHTML+=`
+<div class="card" onclick="window.open('${tool.url}','_blank')" data-cat="${tool.cat}">
+<i class="fa-solid ${tool.icon}"></i>
+<h3>${tool.name}</h3>
+<p>${tool.desc}</p>
+</div>`;
+});
+}
+
+displayTools(tools);
+
+function searchTool(){
+let input=document.getElementById("search").value.toLowerCase();
+let filtered=tools.filter(t=>t.name.toLowerCase().includes(input));
+displayTools(filtered);
+}
+
+function filterCategory(){
+let cat=document.getElementById("category").value;
+if(cat==="all"){displayTools(tools);}
+else{
+let filtered=tools.filter(t=>t.cat===cat);
+displayTools(filtered);
+}
+}
+
+</script>
+</body>
+</html>
